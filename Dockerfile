@@ -12,7 +12,6 @@ RUN git clone --depth 1 https://github.com/asdf-vm/asdf.git $HOME/.asdf && \
     echo '. $HOME/.asdf/asdf.sh' >> $HOME/.bashrc && \
     echo '. $HOME/.asdf/asdf.sh' >> $HOME/.profile 
 
-
 ENV PATH="${PATH}:/root/.asdf/shims:/root/.asdf/bin"
 SHELL ["/bin/bash", "-c"]
 WORKDIR /root
@@ -29,10 +28,11 @@ RUN bundle install
 
 RUN rm -rf /etc/powerdns/*
 COPY powerdns/pdns.conf /etc/powerdns/
-
+COPY entrypoint.sh .
+RUN chmod a+x entrypoint.sh
 COPY sslthing.rb .
 
 EXPOSE 53
 
-ENTRYPOINT [ "pdns_server" ]
+ENTRYPOINT [ "/root/entrypoint.sh" ]
 
